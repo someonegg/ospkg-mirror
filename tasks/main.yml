@@ -1,0 +1,17 @@
+# file: ospkg-mirror/tasks/main.yml
+
+- name: APT | Reset the sources list (/etc/apt/sources.list)
+  template:
+    src: etc_apt_sources.list.j2
+    dest: /etc/apt/sources.list
+    owner: root
+    group: root
+    mode: 0644
+  when:
+    - ansible_os_family in ["Debian"]
+
+- name: APT | Update the apt cache
+  apt:
+    update_cache: yes
+  when:
+    - ansible_os_family in ["Debian"]
