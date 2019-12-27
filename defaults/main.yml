@@ -1,4 +1,2 @@
-# file: ospkg-mirror/defaults/main.yml
-
-apt_release: "{{ ansible_distribution_release|lower }}"
-apt_mirror_url: "http://mirrors.aliyun.com"
+---
+ospkg_mirror_url: "http://mirrors.aliyun.com"

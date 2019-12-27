@@ -1,4 +1,11 @@
-# file: ospkg-mirror/tasks/main.yml
+---
+- name: APT | Backup /etc/apt/sources.list
+  shell: |
+    mv /etc/apt/sources.list /etc/apt/sources.list_$(date +%Y%-m-%d-%H-%M)
+    exit 0
+  become: yes
+  when:
+    - ansible_os_family in ["Debian"]
 
 - name: APT | Reset the sources list (/etc/apt/sources.list)
   template:
@@ -7,11 +14,40 @@
     owner: root
     group: root
     mode: 0644
+  become: yes
   when:
     - ansible_os_family in ["Debian"]
 
 - name: APT | Update the apt cache
   apt:
     update_cache: yes
+  become: yes
   when:
     - ansible_os_family in ["Debian"]
+
+- name: YUM | Backup /etc/yum.repos.d/
+  shell: |
+    mv /etc/yum.repos.d/ /etc/yum.repos.d_$(date +%Y%-m-%d-%H-%M)
+    mkdir /etc/yum.repos.d/
+    exit 0
+  become: yes
+  when:
+    - ansible_os_family in ["RedHat"]
+
+- name: YUM | Reset the repo list (/etc/yum.repos.d/centos.repo)
+  template:
+    src: centos.repo.j2
+    dest: /etc/yum.repos.d/centos.repo
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+  when:
+    - ansible_os_family in ["RedHat"]
+
+- name: YUM | Update the yum cache
+  yum:
+    update_cache: yes
+  become: yes
+  when:
+    - ansible_os_family in ["RedHat"]
